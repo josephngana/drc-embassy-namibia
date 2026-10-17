@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Newsreader", Georgia, Cambria, serif;
+  --font-sans: "Manrope", system-ui, -apple-system, sans-serif;
+  --font-condensed: "IBM Plex Sans Condensed", sans-serif;
+
+  --color-drc-navy: #071A2F;
+  --color-drc-blue: #1478C8;
+  --color-drc-gold: #C89A3D;
+  --color-drc-ivory: #F8F7F3;
+  --color-drc-slate: #536273;
+  --color-drc-red: #9E2F3A;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: #F8F7F3;
+  color: #071A2F;
+}
+
+/* Diplomatic ribbon motif - refined diagonal geometry inspired by DRC & Namibia */
+.diplomatic-ribbon-subtle {
+  background: linear-gradient(
+    135deg,
+    rgba(20, 120, 200, 0.15) 0%,
+    rgba(20, 120, 200, 0.15) 30%,
+    rgba(200, 154, 61, 0.25) 30%,
+    rgba(200, 154, 61, 0.25) 35%,
+    rgba(158, 47, 58, 0.2) 35%,
+    rgba(158, 47, 58, 0.2) 40%,
+    rgba(200, 154, 61, 0.25) 40%,
+    rgba(200, 154, 61, 0.25) 45%,
+    transparent 45%
+  );
+}
+
+.diplomatic-ribbon-line {
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(200, 154, 61, 0.2) 10%,
+    #1478C8 30%,
+    #C89A3D 50%,
+    #9E2F3A 70%,
+    rgba(200, 154, 61, 0.2) 90%,
+    transparent 100%
+  );
+}
+
+/* Diplomatic drawer animations */
+@keyframes drawerFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes drawerSlideRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-drawer-backdrop {
+  animation: drawerFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-drawer-panel {
+  animation: drawerSlideRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Diplomatic scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #071A2F;
+}
+::-webkit-scrollbar-thumb {
+  background: #C89A3D;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #dcad4e;
+}

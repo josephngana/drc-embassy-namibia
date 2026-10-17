@@ -1,0 +1,6 @@
+{
+  "name": "Embassy of the Democratic Republic of the Congo in Namibia",
+  "description": "Official diplomatic platform and consular portal of the Embassy of the Democratic Republic of the Congo in the Republic of Namibia.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
