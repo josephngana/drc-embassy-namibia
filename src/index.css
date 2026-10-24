@@ -90,3 +90,63 @@ html {
 ::-webkit-scrollbar-thumb:hover {
   background: #dcad4e;
 }
+
+/* Shared light-blue identity and accessible interaction baseline. */
+.hero-light {
+  background: radial-gradient(ellipse at 90% 10%, #c6e9fb 0%, transparent 55%), linear-gradient(115deg, #f3faff, #e2f2fc);
+}
+html { scroll-padding-top: 100px; scrollbar-color: #76b5db #edf7fd; scrollbar-width: thin; }
+body { margin: 0; }
+:where(a, button, input, select, textarea):focus-visible { outline: 3px solid #1478C8; outline-offset: 4px; }
+button:not(:disabled), a { cursor: pointer; }
+textarea { resize: none; }
+section[id] { scroll-margin-top: 100px; }
+::-webkit-scrollbar-track { background: #edf7fd; }
+::-webkit-scrollbar-thumb { background: #76b5db; }
+::-webkit-scrollbar-thumb:hover { background: #176fa6; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+@media (forced-colors: active) { * { scrollbar-color: auto; } }
+/* Keep long translated labels within grid and flex tracks. */
+.grid > *, .hero-light aside { min-width: 0; }
+#contact, footer { overflow-wrap: anywhere; }
+
+/* Country discovery and embassy bulletins: no generic stock photography. */
+.section-kicker { font-family: var(--font-condensed); font-size: 12px; line-height: 1.5; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: #176fa6; }
+.drc-discover { background: linear-gradient(110deg, #edf8ff, #e2f2fc); }
+.drc-flag-panel { margin-inline: 0; background: #ffffffaa; border: 1px solid #bbd8ea; border-bottom: 3px solid #c89a3d; }
+.discover-flag { width: min(100%, 260px); height: auto; display: block; box-shadow: 0 8px 24px #176fa620; border-radius: 0; }
+.theme-icon { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: #176fa6; background: #fff; border: 1px solid #bbd8ea; border-radius: 50%; }
+.theme-details summary { list-style: none; }
+.theme-details summary::-webkit-details-marker { display: none; }
+.theme-details[open] summary svg { transform: rotate(180deg); }
+.theme-details summary:focus-visible { outline: 3px solid #1478c8; outline-offset: 5px; }
+.embassy-bulletin { background: #edf7fd; border: 1px solid #cce3f1; border-top: 3px solid #c89a3d; }
+.sample-label { font-family: var(--font-condensed); color: #536273; border: 1px solid #d2dde5; padding: 2px 7px; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+
+/* Width is owned by the viewport; content tracks may shrink and wrap. */
+html, body, #root { width: 100%; min-width: 0; }
+#root > div, main { min-width: 0; width: 100%; }
+img, video, iframe { max-width: 100%; }
+
+.consular-assistance { background: #edf7fd; border: 1px solid #cce3f1; border-top: 3px solid #c89a3d; }
+.consular-action { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 56px; padding: 14px 18px; text-align: center; font-size: 14px; font-weight: 600; line-height: 1.5; transition: background-color .2s, border-color .2s; }
+.consular-action svg { flex-shrink: 0; }
+.consular-action-primary { background: #176fa6; color: white; border: 1px solid #176fa6; }
+.consular-action-primary:hover { background: #125d8d; border-color: #125d8d; }
+.consular-action-secondary { background: white; color: #176fa6; border: 1px solid #aacfe5; }
+.consular-action-secondary:hover { background: #e2f2fc; border-color: #176fa6; }
+
+.accessible-modal { border: 0; background: transparent; color: inherit; padding: 20px; margin: auto; width: 100%; max-width: none; height: 100dvh; max-height: none; overflow-y: auto; }
+.accessible-modal[open] { display: flex; align-items: center; justify-content: center; }
+.accessible-modal::backdrop { background: rgb(7 26 47 / .65); backdrop-filter: blur(4px); }
+.accessible-modal > * { flex-shrink: 0; max-height: calc(100dvh - 40px); overflow-y: auto; margin-block: auto; }
+button:disabled { opacity: .65; cursor: not-allowed; }
+@media(max-width: 639px) { #services { padding-block: 48px; } #services > div { gap: 32px; } #services .grid > div { padding: 24px; } }
+.accessible-drawer { padding: 0; }
+.accessible-drawer[open] { justify-content: flex-end; }
+.accessible-drawer > * { max-height: 100dvh; height: 100dvh; margin-block: 0; overflow-y: auto; }
+.skip-link { position: fixed; left: 16px; top: 12px; z-index: 100; transform: translateY(-200%); padding: 12px 20px; background: white; color: #173b56; font-weight: 600; border: 2px solid #176fa6; }
+.skip-link:focus { transform: translateY(0); }

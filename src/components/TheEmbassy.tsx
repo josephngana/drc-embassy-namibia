@@ -44,7 +44,7 @@ export const TheEmbassy: React.FC = () => {
     <section
       id="the-embassy"
       aria-label="The Embassy institutional mandate"
-      className="py-24 sm:py-28 lg:py-32 bg-white border-b border-slate-200/70"
+      className="py-16 sm:py-20 lg:py-24 bg-white border-b border-slate-200/70"
     >
       <div className="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">

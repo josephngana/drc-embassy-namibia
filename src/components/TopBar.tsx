@@ -10,15 +10,15 @@ export const TopBar: React.FC<TopBarProps> = ({ onOpenEmergencyModal }) => {
   const { lang, setLang, t } = useLanguage();
 
   return (
-    <div className="bg-[#051322] text-[#F8F7F3]/75 text-xs border-b border-[#0D223E] py-2 px-4 sm:px-6 lg:px-8">
+    <div className="bg-[#125D8D] text-[#F8F7F3]/75 text-xs border-b border-[#0D223E] py-2 px-4 sm:px-6 lg:px-8">
       <div className="max-w-[1340px] mx-auto flex items-center justify-between gap-4">
         {/* Left: Official statement */}
-        <div className="flex items-center gap-2 truncate">
+        <div className="flex min-w-0 items-center gap-2 truncate">
           <span className="w-1.5 h-1.5 rounded-full bg-[#C89A3D] shrink-0" aria-hidden="true" />
           <span className="font-normal text-[#F8F7F3]/80 text-[11px] sm:text-xs truncate tracking-wide">
             {t({
-              en: 'Official Diplomatic Mission of the Democratic Republic of the Congo in Namibia',
-              fr: 'Mission Diplomatique Officielle de la République Démocratique du Congo en Namibie',
+              en: 'Presentation preview · Pending embassy approval',
+              fr: 'Version de présentation · En attente de validation de l’ambassade',
             })}
           </span>
         </div>
@@ -27,9 +27,9 @@ export const TopBar: React.FC<TopBarProps> = ({ onOpenEmergencyModal }) => {
         <div className="flex items-center gap-4 sm:gap-6 text-[#F8F7F3]/80 shrink-0 text-[11px] sm:text-xs font-condensed">
           <a
             href="#contact"
-            className="hover:text-[#C89A3D] transition-colors flex items-center gap-1.5 whitespace-nowrap"
+            className="hover:text-[#FFE3A0] transition-colors flex items-center gap-1.5 whitespace-nowrap"
           >
-            <Phone size={11} className="text-[#C89A3D]" />
+            <Phone size={11} className="text-[#FFE3A0]" />
             <span className="hidden sm:inline">{t({ en: 'Contact', fr: 'Contact' })}</span>
           </a>
 
@@ -43,12 +43,12 @@ export const TopBar: React.FC<TopBarProps> = ({ onOpenEmergencyModal }) => {
           </button>
 
           {/* Clean minimal Language Switcher EN / FR */}
-          <div className="flex items-center text-[11px] font-semibold tracking-wider text-slate-400">
+          <div className="flex items-center text-[11px] font-semibold tracking-wider text-sky-100">
             <button
               type="button"
               onClick={() => setLang('en')}
               className={`hover:text-white transition-colors cursor-pointer px-1 ${
-                lang === 'en' ? 'text-[#C89A3D] font-bold' : ''
+                lang === 'en' ? 'text-[#FFE3A0] font-bold' : ''
               }`}
               aria-label="Switch to English"
             >
@@ -59,7 +59,7 @@ export const TopBar: React.FC<TopBarProps> = ({ onOpenEmergencyModal }) => {
               type="button"
               onClick={() => setLang('fr')}
               className={`hover:text-white transition-colors cursor-pointer px-1 ${
-                lang === 'fr' ? 'text-[#C89A3D] font-bold' : ''
+                lang === 'fr' ? 'text-[#FFE3A0] font-bold' : ''
               }`}
               aria-label="Passer en Français"
             >

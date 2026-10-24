@@ -19,21 +19,24 @@ export const AmbassadorSection: React.FC<AmbassadorSectionProps> = ({
     <section
       id="ambassador"
       aria-label="The Ambassador's message"
-      className="py-24 sm:py-28 lg:py-32 bg-[#F8F7F3] border-b border-slate-200/70"
+      className="py-16 sm:py-20 lg:py-24 bg-[#F8F7F3] border-b border-slate-200/70"
     >
       <div className="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-[220px_minmax(0,1fr)] gap-8 md:gap-10 lg:gap-16 items-start">
           {/* LEFT: 40% Authentic Diplomatic Portrait Plate (5 cols) */}
-          <div className="lg:col-span-5 flex justify-center">
-            <div className="relative w-full max-w-sm sm:max-w-md group">
+          <div className="flex justify-center md:justify-start">
+            <div className="relative w-full max-w-[182px] group">
               {/* Subtle gold offset rule frame */}
               <div className="absolute -inset-2.5 border border-[#C89A3D]/30 -z-10 translate-x-1 translate-y-1 pointer-events-none" />
 
-              <div className="relative aspect-[4/5] overflow-hidden bg-[#071A2F] border border-[#C89A3D]/40 shadow-xl flex flex-col justify-between">
+              <div className="relative aspect-[182/273] overflow-hidden bg-[#176FA6] border border-[#C89A3D]/40 shadow-xl flex flex-col justify-between">
                 {/* Official supplied portrait of Ambassador Christian Katoto */}
                 {!imgError ? (
                   <img
                     src="/christian-katoto.png"
+                    width={182}
+                    height={273}
+                    loading="lazy"
                     alt="H.E. Christian Katoto, Ambassador Extraordinary and Plenipotentiary of the Democratic Republic of the Congo to the Republic of Namibia"
                     onError={() => setImgError(true)}
                     className="w-full h-full object-cover object-top"
@@ -61,7 +64,7 @@ export const AmbassadorSection: React.FC<AmbassadorSectionProps> = ({
 
                     {/* Center Sovereign Seal and Title */}
                     <div className="relative z-10 space-y-4 my-auto py-4">
-                      <div className="w-24 h-24 mx-auto rounded-full p-2 bg-[#051322] border-2 border-[#C89A3D] shadow-inner flex items-center justify-center">
+                      <div className="w-24 h-24 mx-auto rounded-full p-2 bg-[#125D8D] border-2 border-[#C89A3D] shadow-inner flex items-center justify-center">
                         <DrcEmblem size={64} variant="gold" />
                       </div>
 
@@ -92,7 +95,7 @@ export const AmbassadorSection: React.FC<AmbassadorSectionProps> = ({
               </div>
 
               {/* Dignified Caption Below Image */}
-              <div className="pt-3 flex items-center justify-between text-xs font-condensed tracking-wider">
+              <div className="pt-3 flex flex-col items-start gap-1 text-xs font-condensed tracking-wider">
                 <span className="text-[#071A2F] font-bold uppercase">
                   {lang === 'fr' ? ambassador.nameFr : ambassador.name}
                 </span>
@@ -104,7 +107,7 @@ export const AmbassadorSection: React.FC<AmbassadorSectionProps> = ({
           </div>
 
           {/* RIGHT: 60% Content (7 cols in 12-col grid = ~58%) */}
-          <div className="lg:col-span-7 space-y-6">
+          <div className="min-w-0 space-y-6">
             <div className="space-y-2">
               <span className="font-condensed text-xs font-bold tracking-[0.2em] uppercase text-[#C89A3D] block">
                 {t({ en: 'THE AMBASSADOR', fr: 'L’AMBASSADEUR' })}

@@ -88,7 +88,7 @@ export const DiplomaticTeam: React.FC = () => {
     <section
       id="team"
       aria-label="Diplomatic Team"
-      className="py-24 sm:py-28 lg:py-32 bg-white border-b border-slate-200/70"
+      className="py-16 sm:py-20 lg:py-24 bg-white border-b border-slate-200/70"
     >
       {/* Slightly increased content width: max-w-[1380px] */}
       <div className="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
@@ -116,7 +116,7 @@ export const DiplomaticTeam: React.FC = () => {
             return (
               <div key={member.id} className="group space-y-4">
                 {/* 4:5 Ratio Portrait Frame */}
-                <div className="relative aspect-[4/5] overflow-hidden bg-[#071A2F] border border-slate-200 group-hover:border-[#C89A3D]/70 transition-all duration-300 shadow-sm">
+                <div className="relative aspect-[4/5] overflow-hidden bg-[#176FA6] border border-slate-200 group-hover:border-[#C89A3D]/70 transition-all duration-300 shadow-sm">
                   {/* Image render if provided asset exists */}
                   {!hasError && (
                     <img
@@ -143,7 +143,7 @@ export const DiplomaticTeam: React.FC = () => {
 
                       {/* Center Diplomatic Insignia */}
                       <div className="relative z-10 space-y-3 my-auto py-2">
-                        <div className="w-16 h-16 mx-auto rounded-full bg-[#051322] border border-[#C89A3D] p-1 shadow-inner flex items-center justify-center">
+                        <div className="w-16 h-16 mx-auto rounded-full bg-[#125D8D] border border-[#C89A3D] p-1 shadow-inner flex items-center justify-center">
                           <span className="font-serif text-xl font-bold tracking-wider text-[#C89A3D]">
                             {member.initials}
                           </span>

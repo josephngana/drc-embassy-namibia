@@ -21,47 +21,19 @@ import { DrcEmblem, DrcFlag, NamibiaFlag } from './Emblem';
 export const ContactSection: React.FC = () => {
   const { t } = useLanguage();
 
-  const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    telephone: '',
-    department: 'consular',
-    subject: '',
-    message: '',
-  });
-
-  const [submitted, setSubmitted] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
   const [copiedCoords, setCopiedCoords] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.fullName.trim() || !formData.email.trim() || !formData.message.trim()) {
-      setErrorMsg(
-        t({
-          en: 'Please complete all required fields.',
-          fr: 'Veuillez renseigner tous les champs obligatoires.',
-        })
-      );
-      return;
-    }
-    setErrorMsg('');
-    setSubmitted(true);
-  };
-
   const handleCopyCoords = () => {
-    navigator.clipboard.writeText('22°33\'21.0"S 17°05\'32.0"E');
-    setCopiedCoords(true);
-    setTimeout(() => setCopiedCoords(false), 2400);
+    navigator.clipboard.writeText('22°33\'21.0"S 17°05\'32.0"E').then(() => { setCopiedCoords(true); setTimeout(() => setCopiedCoords(false), 2400); }).catch(() => setCopiedCoords(false));
   };
 
   return (
     <section
       id="contact"
       aria-label="Visit or Contact the Embassy"
-      className="py-24 sm:py-28 lg:py-32 bg-white border-b border-slate-200/70"
+      className="py-16 sm:py-20 lg:py-24 bg-white border-b border-slate-200/70"
     >
-      <div className="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 space-y-20 lg:space-y-24">
+      <div className="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 space-y-12 lg:space-y-16">
         {/* ========================================================================= */}
         {/* PART 1: Embassy Information (Left ~40%) + Contact Form (Right ~60%)       */}
         {/* ========================================================================= */}
@@ -184,49 +156,6 @@ export const ContactSection: React.FC = () => {
           {/* RIGHT COLUMN: Contact Form (~60% = 7 cols)                              */}
           {/* ----------------------------------------------------------------------- */}
           <div className="lg:col-span-7 bg-[#F8F7F3] border border-slate-200/90 p-8 sm:p-12 shadow-sm">
-            {submitted ? (
-              <div className="text-center py-12 space-y-5">
-                <div className="w-16 h-16 mx-auto rounded-full bg-[#071A2F] border-2 border-[#C89A3D] flex items-center justify-center shadow-md">
-                  <CheckCircle2 size={32} className="text-[#C89A3D]" />
-                </div>
-
-                <div className="space-y-2">
-                  <span className="font-condensed text-xs font-bold tracking-[0.2em] uppercase text-[#C89A3D]">
-                    {t({ en: 'TRANSMISSION CONFIRMED', fr: 'TRANSMISSION CONFIRMÉE' })}
-                  </span>
-                  <h4 className="font-serif text-2xl sm:text-3xl font-medium text-[#071A2F]">
-                    {t({ en: 'Inquiry Registered', fr: 'Demande Enregistrée' })}
-                  </h4>
-                </div>
-
-                <p className="font-sans text-base text-[#536273] font-light max-w-md mx-auto leading-relaxed">
-                  {t({
-                    en: 'Your official communication has been successfully submitted to the Embassy Chancery Secretariat. An authorized officer will respond through official diplomatic channels.',
-                    fr: 'Votre communication officielle a été enregistrée auprès du Secrétariat de la Chancellerie. Un agent habilité vous répondra dans les meilleurs délais par voie officielle.',
-                  })}
-                </p>
-
-                <div className="pt-4">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSubmitted(false);
-                      setFormData({
-                        fullName: '',
-                        email: '',
-                        telephone: '',
-                        department: 'consular',
-                        subject: '',
-                        message: '',
-                      });
-                    }}
-                    className="px-8 py-3.5 bg-[#071A2F] hover:bg-[#1478C8] text-white text-xs font-condensed font-bold tracking-widest uppercase transition-colors cursor-pointer"
-                  >
-                    {t({ en: 'TRANSMIT ANOTHER INQUIRY', fr: 'TRANSMETTRE UNE AUTRE DEMANDE' })}
-                  </button>
-                </div>
-              </div>
-            ) : (
               <div className="space-y-8 font-sans">
                 {/* Form Header */}
                 <div className="space-y-2 border-b border-slate-200 pb-5">
@@ -238,159 +167,14 @@ export const ContactSection: React.FC = () => {
                   </h3>
                   <p className="text-sm text-[#536273] font-light">
                     {t({
-                      en: 'Inquiries are officially received by the Secretariat and routed to the accredited diplomatic or consular division.',
-                      fr: 'Les communications sont reçues par le Secrétariat et orientées vers le département diplomatique ou consulaire compétent.',
+                      en: 'Use the contact details below to discuss your inquiry. Online messaging is planned after approval.',
+                      fr: 'Utilisez les coordonnées ci-dessous pour votre demande. La messagerie en ligne est prévue après validation.',
                     })}
                   </p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-5">
-                  {errorMsg && (
-                    <div className="p-3.5 bg-red-50 border border-red-200 text-red-700 flex items-center gap-2.5 text-xs font-medium">
-                      <AlertCircle size={16} className="shrink-0" />
-                      <span>{errorMsg}</span>
-                    </div>
-                  )}
-
-                  {/* Full Name */}
-                  <div className="space-y-2">
-                    <label className="font-condensed text-xs font-bold tracking-wider uppercase text-[#071A2F] flex items-center justify-between">
-                      <span>{t({ en: 'Full Name / Civility', fr: 'Nom & Prénom / Titre' })}</span>
-                      <span className="text-[#C89A3D] text-[10px]">* {t({ en: 'Required', fr: 'Requis' })}</span>
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={formData.fullName}
-                      onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                      placeholder={t({
-                        en: 'e.g. Honorable / Dr. / Mr. / Mrs. Full Name',
-                        fr: 'Ex. Son Excellence / M. / Mme Nom & Prénom',
-                      })}
-                      className="w-full px-4 py-3 bg-white border border-slate-300 focus:border-[#071A2F] focus:ring-1 focus:ring-[#C89A3D] text-sm text-[#071A2F] outline-hidden transition-all placeholder:text-slate-400"
-                    />
-                  </div>
-
-                  {/* Email & Telephone */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <div className="space-y-2">
-                      <label className="font-condensed text-xs font-bold tracking-wider uppercase text-[#071A2F] flex items-center justify-between">
-                        <span>{t({ en: 'Official Email', fr: 'Courriel Officiel' })}</span>
-                        <span className="text-[#C89A3D] text-[10px]">*</span>
-                      </label>
-                      <input
-                        type="email"
-                        required
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        placeholder="contact@domain.org"
-                        className="w-full px-4 py-3 bg-white border border-slate-300 focus:border-[#071A2F] focus:ring-1 focus:ring-[#C89A3D] text-sm text-[#071A2F] outline-hidden transition-all placeholder:text-slate-400"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="font-condensed text-xs font-bold tracking-wider uppercase text-[#071A2F] block">
-                        {t({ en: 'Telephone', fr: 'Téléphone' })}
-                      </label>
-                      <input
-                        type="tel"
-                        value={formData.telephone}
-                        onChange={(e) => setFormData({ ...formData, telephone: e.target.value })}
-                        placeholder="+264 ... / +243 ..."
-                        className="w-full px-4 py-3 bg-white border border-slate-300 focus:border-[#071A2F] focus:ring-1 focus:ring-[#C89A3D] text-sm text-[#071A2F] outline-hidden transition-all placeholder:text-slate-400"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Department / Category */}
-                  <div className="space-y-2">
-                    <label className="font-condensed text-xs font-bold tracking-wider uppercase text-[#071A2F] block">
-                      {t({ en: 'Concerned Department', fr: 'Département Concerné' })}
-                    </label>
-                    <select
-                      value={formData.department}
-                      onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-                      className="w-full px-4 py-3 bg-white border border-slate-300 focus:border-[#071A2F] focus:ring-1 focus:ring-[#C89A3D] text-sm text-[#071A2F] outline-hidden transition-all"
-                    >
-                      <option value="consular">
-                        {t({ en: 'Consular & Visa Services', fr: 'Services Consulaires & Visas' })}
-                      </option>
-                      <option value="political">
-                        {t({ en: 'Bilateral & Political Affairs', fr: 'Affaires Politiques & Bilatérales' })}
-                      </option>
-                      <option value="economic">
-                        {t({ en: 'Trade & Economic Cooperation (Walvis Bay)', fr: 'Coopération Économique & Walvis Bay' })}
-                      </option>
-                      <option value="cultural">
-                        {t({ en: 'Academic & Cultural Affairs', fr: 'Affaires Universitaires & Culturelles' })}
-                      </option>
-                      <option value="diaspora">
-                        {t({ en: 'Diaspora & Citizen Assistance', fr: 'Assistance aux Ressortissants' })}
-                      </option>
-                      <option value="general">
-                        {t({ en: 'General Chancery Inquiries', fr: 'Renseignements Généraux' })}
-                      </option>
-                    </select>
-                  </div>
-
-                  {/* Subject */}
-                  <div className="space-y-2">
-                    <label className="font-condensed text-xs font-bold tracking-wider uppercase text-[#071A2F] flex items-center justify-between">
-                      <span>{t({ en: 'Subject', fr: 'Objet de la démarche' })}</span>
-                      <span className="text-[#C89A3D] text-[10px]">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={formData.subject}
-                      onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                      placeholder={t({
-                        en: 'e.g. Visa application inquiry, document legalization, bilateral meeting',
-                        fr: 'Ex. Demande de visa, légalisation de document, audience bilatérale',
-                      })}
-                      className="w-full px-4 py-3 bg-white border border-slate-300 focus:border-[#071A2F] focus:ring-1 focus:ring-[#C89A3D] text-sm text-[#071A2F] outline-hidden transition-all placeholder:text-slate-400"
-                    />
-                  </div>
-
-                  {/* Message */}
-                  <div className="space-y-2">
-                    <label className="font-condensed text-xs font-bold tracking-wider uppercase text-[#071A2F] flex items-center justify-between">
-                      <span>{t({ en: 'Official Message / Details', fr: 'Message Officiel / Détails' })}</span>
-                      <span className="text-[#C89A3D] text-[10px]">*</span>
-                    </label>
-                    <textarea
-                      rows={5}
-                      required
-                      value={formData.message}
-                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      placeholder={t({
-                        en: 'Please detail your official inquiry, citizen request, or bilateral communication...',
-                        fr: 'Veuillez préciser votre demande officielle ou démarche administrative...',
-                      })}
-                      className="w-full px-4 py-3 bg-white border border-slate-300 focus:border-[#071A2F] focus:ring-1 focus:ring-[#C89A3D] text-sm text-[#071A2F] outline-hidden transition-all placeholder:text-slate-400 resize-y"
-                    />
-                  </div>
-
-                  {/* Submit Button & Diplomatic Note */}
-                  <div className="pt-2 space-y-3">
-                    <button
-                      type="submit"
-                      className="w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-[#071A2F] hover:bg-[#1478C8] active:bg-[#051322] text-[#F8F7F3] text-xs font-condensed font-bold tracking-widest uppercase px-9 py-4 border border-[#C89A3D]/50 transition-all cursor-pointer shadow-sm"
-                    >
-                      <Send size={14} className="text-[#C89A3D]" />
-                      <span>{t({ en: 'TRANSMIT OFFICIAL INQUIRY', fr: 'TRANSMETTRE LA DEMANDE OFFICIELLE' })}</span>
-                    </button>
-
-                    <p className="text-[11px] font-sans text-slate-500 font-light leading-relaxed">
-                      {t({
-                        en: 'Communications transmitted through this portal are treated under official diplomatic confidentiality in accordance with the Vienna Convention on Diplomatic Relations (1961).',
-                        fr: 'Les communications transmises via ce portail sont traitées sous le sceau de la confidentialité diplomatique conformément à la Convention de Vienne sur les relations diplomatiques (1961).',
-                      })}
-                    </p>
-                  </div>
-                </form>
+                <div className="p-6 bg-sky-50 border border-sky-200 text-[#173B56] space-y-4" role="status"><h4 className="font-serif text-2xl">{t({en:'Contact us directly',fr:'Contactez-nous directement'})}</h4><p className="leading-relaxed">{t({en:'Online inquiries are not available yet. Please call the embassy to discuss your request, confirm opening hours, or arrange a consular appointment.',fr:'Les demandes en ligne ne sont pas encore disponibles. Veuillez appeler l’ambassade pour discuter de votre demande, confirmer les horaires ou organiser un rendez-vous consulaire.'})}</p><a href="tel:+26461256287" className="inline-flex items-center gap-2 font-semibold text-[#176FA6] hover:underline"><Phone size={17}/>+264 61 256 287</a></div>
               </div>
-            )}
           </div>
         </div>
 
@@ -433,7 +217,7 @@ export const ContactSection: React.FC = () => {
           </div>
 
           {/* Full-Width Cartographic Stage */}
-          <div className="relative aspect-[16/9] sm:aspect-[2.5/1] lg:aspect-[3.2/1] overflow-hidden bg-[#071A2F] border border-[#0D223E] shadow-xl">
+          <div className="relative aspect-[16/9] sm:aspect-[2.5/1] lg:aspect-[3.2/1] overflow-hidden bg-[#176FA6] border border-[#0D223E] shadow-xl">
             {/* Precision Cartographic Vector Artwork */}
             <svg
               className="w-full h-full"
@@ -539,10 +323,10 @@ export const ContactSection: React.FC = () => {
 
             {/* Central Embassy Identification Card Overlay */}
             <div className="absolute inset-0 flex items-center justify-center p-4 pointer-events-none">
-              <div className="pointer-events-auto max-w-xl w-full bg-[#051322]/95 border-2 border-[#C89A3D]/70 p-5 sm:p-6 backdrop-blur-md shadow-2xl space-y-4">
+              <div className="pointer-events-auto max-w-xl w-full bg-[#125D8D]/95 border-2 border-[#C89A3D]/70 p-5 sm:p-6 backdrop-blur-md shadow-2xl space-y-4">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-11 h-11 rounded-full bg-[#071A2F] border border-[#C89A3D] flex items-center justify-center shrink-0 shadow-inner">
+                    <div className="w-11 h-11 rounded-full bg-[#176FA6] border border-[#C89A3D] flex items-center justify-center shrink-0 shadow-inner">
                       <MapPin size={22} className="text-[#C89A3D] stroke-[2.2]" />
                     </div>
                     <div>

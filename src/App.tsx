@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { LanguageProvider } from './context/LanguageContext';
+import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import { TopBar } from './components/TopBar';
 import { Header } from './components/Header';
 import { NoticeBar } from './components/NoticeBar';
@@ -13,7 +13,6 @@ import { AmbassadorSection } from './components/AmbassadorSection';
 import { TheEmbassy } from './components/TheEmbassy';
 import { ConsularServices } from './components/ConsularServices';
 import { BilateralRelations } from './components/BilateralRelations';
-import { DiplomaticTeam } from './components/DiplomaticTeam';
 import { NewsSection } from './components/NewsSection';
 import { DiscoverDRC } from './components/DiscoverDRC';
 import { ContactSection } from './components/ContactSection';
@@ -27,13 +26,13 @@ import {
   NoticeModal,
   EmergencyModal,
   FormsModal,
-  DiplomatModal,
   ArticleModal,
 } from './components/Modals';
 
-import { ConsularService, Diplomat, NewsArticle } from './data/embassyData';
+import { ConsularService, NewsArticle } from './data/embassyData';
 
 function EmbassyOnePageApp() {
+  const { t } = useLanguage();
   // Modal states
   const [appointmentModalOpen, setAppointmentModalOpen] = useState(false);
   const [preselectedService, setPreselectedService] = useState<string | undefined>(undefined);
@@ -43,7 +42,6 @@ function EmbassyOnePageApp() {
   const [ambassadorModalOpen, setAmbassadorModalOpen] = useState(false);
 
   const [selectedService, setSelectedService] = useState<ConsularService | null>(null);
-  const [selectedDiplomat, setSelectedDiplomat] = useState<Diplomat | null>(null);
   const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(null);
 
   const handleOpenAppointment = (serviceId?: string) => {
@@ -53,6 +51,7 @@ function EmbassyOnePageApp() {
 
   return (
     <div className="min-h-screen bg-[#F8F7F3] text-[#071A2F] flex flex-col font-sans selection:bg-[#1478C8]/20 selection:text-[#071A2F]">
+      <a href="#main-content" className="skip-link">{t({en:'Skip to main content',fr:'Aller au contenu principal'})}</a>
       {/* 1. TOP UTILITY BAR */}
       <TopBar onOpenEmergencyModal={() => setEmergencyModalOpen(true)} />
 
@@ -66,9 +65,15 @@ function EmbassyOnePageApp() {
       {/* 2. SLIM OFFICIAL NOTICE */}
       <NoticeBar onOpenNoticeModal={() => setNoticeModalOpen(true)} />
 
-      <main className="flex-1">
+      <main id="main-content" tabIndex={-1} className="flex-1">
         {/* 3. HERO (Full-width editorial composition, dark navy) */}
         <Hero />
+
+        <ConsularServices
+          onSelectService={(service) => setSelectedService(service)}
+          onOpenAppointmentModal={() => handleOpenAppointment()}
+          onOpenFormsModal={() => setFormsModalOpen(true)}
+        />
 
         {/* 4. AMBASSADOR (Magazine profile / presidential communication) */}
         <AmbassadorSection
@@ -79,17 +84,11 @@ function EmbassyOnePageApp() {
         <TheEmbassy />
 
         {/* 6. CONSULAR SERVICES (Quiet 3x2 grid + single horizontal action bar) */}
-        <ConsularServices
-          onSelectService={(service) => setSelectedService(service)}
-          onOpenAppointmentModal={() => handleOpenAppointment()}
-          onOpenFormsModal={() => setFormsModalOpen(true)}
-        />
+
 
         {/* 7. DRC & NAMIBIA (Visual bilateral relations, 3 editorial columns) */}
         <BilateralRelations />
 
-        {/* 8. DIPLOMATIC TEAM (4 editorial portraits in one row, gold rules) */}
-        <DiplomaticTeam />
 
         {/* 9. NEWS & OFFICIAL COMMUNICATIONS (60/40 magazine layout + separate notice) */}
         <NewsSection
@@ -140,10 +139,6 @@ function EmbassyOnePageApp() {
         onClose={() => setFormsModalOpen(false)}
       />
 
-      <DiplomatModal
-        diplomat={selectedDiplomat}
-        onClose={() => setSelectedDiplomat(null)}
-      />
 
       <ArticleModal
         article={selectedArticle}

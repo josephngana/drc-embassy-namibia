@@ -1,176 +1,37 @@
-import React, { useState } from 'react';
-import { X } from 'lucide-react';
+import React from 'react';
+import { ArrowRight, ChevronDown, Music2, Trees, Gem } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
-import { DISCOVER_DRC_3_CARDS } from '../data/embassyData';
+import { DrcFlag } from './Emblem';
 
 export const DiscoverDRC: React.FC = () => {
   const { t } = useLanguage();
-  const [selectedTheme, setSelectedTheme] = useState<(typeof DISCOVER_DRC_3_CARDS)[0] | null>(null);
-
-  // Unmistakably Congolese imagery: Virunga mountain gorillas, authentic cultural arts, and modern investment skyline
-  const themeImages = [
-    {
-      id: 'culture-heritage',
-      image:
-        'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=1200&q=80',
-      label: { en: 'CULTURE & HERITAGE', fr: 'CULTURE & PATRIMOINE' },
-      subtitle: { en: 'Congolese Rumba & Sovereign Arts', fr: 'Rumba Congolaise & Arts Souverains' },
-      summary: {
-        en: 'UNESCO Intangible Cultural Heritage, iconic Congolese rumba melodies, and renowned contemporary Kinshasa plastic arts.',
-        fr: 'Patrimoine culturel immatériel de l’UNESCO, rumba congolaise mythique et rayonnement international de l’école de Kinshasa.',
-      },
-    },
-    {
-      id: 'tourism-nature',
-      image:
-        'https://images.unsplash.com/photo-1540573133985-87b6da6d54a9?auto=format&fit=crop&w=1200&q=80',
-      label: { en: 'NATURE & TOURISM', fr: 'NATURE & TOURISME' },
-      subtitle: { en: 'Virunga Sanctuaries & Congo Basin', fr: 'Sanctuaires des Virunga & Bassin du Congo' },
-      summary: {
-        en: 'Home to the mountain gorillas of Virunga, the second largest rainforest lung on Earth, and the majestic Congo River.',
-        fr: 'Sanctuaire des gorilles de montagne des Virunga, deuxième poumon vert de la planète et majestueux fleuve Congo.',
-      },
-    },
-    {
-      id: 'business-investment',
-      image:
-        'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80',
-      label: { en: 'BUSINESS & INVESTMENT', fr: 'ÉCONOMIE & INVESTISSEMENT' },
-      subtitle: { en: 'Strategic Minerals & Modern Logistics', fr: 'Minerais Stratégiques & Logistique Moderne' },
-      summary: {
-        en: 'World leader in cobalt and high-grade copper, monumental Inga hydropower potential, and Special Economic Zones facilitated by ANAPI.',
-        fr: 'Leader mondial du cobalt et du cuivre, potentiel hydroélectrique colossal du Grand Inga et guichet unique d’investissement ANAPI.',
-      },
-    },
+  const themes = [
+    { id:'culture', Icon:Music2, title:{en:'Culture & heritage',fr:'Culture et patrimoine'}, subtitle:{en:'The rhythm of a nation',fr:'Le rythme d’une nation'}, text:{en:'Discover Congolese rumba, visual arts, literature, and the creativity of communities across the country.',fr:'Découvrez la rumba congolaise, les arts visuels, la littérature et la créativité des communautés du pays.'}, detail:{en:'From music and dance to contemporary art, Congolese cultural expression connects generations and communities at home and abroad.',fr:'De la musique et la danse à l’art contemporain, la culture congolaise relie les générations et les communautés au pays comme à l’étranger.'}},
+    { id:'nature', Icon:Trees, title:{en:'Nature & landscapes',fr:'Nature et paysages'}, subtitle:{en:'Along the Congo River',fr:'Au fil du fleuve Congo'}, text:{en:'Explore the country through its great river, the forests of the Congo Basin, and the landscapes of Virunga.',fr:'Explorez le pays à travers son grand fleuve, les forêts du bassin du Congo et les paysages des Virunga.'}, detail:{en:'These landscapes are part of the country’s natural heritage. Contact the embassy for travel guidance before planning a visit.',fr:'Ces paysages font partie du patrimoine naturel du pays. Contactez l’ambassade pour vous renseigner avant de préparer un voyage.'}},
+    { id:'investment', Icon:Gem, title:{en:'Business & cooperation',fr:'Affaires et coopération'}, subtitle:{en:'Building lasting connections',fr:'Construire des liens durables'}, text:{en:'Learn about opportunities for cooperation in agriculture, energy, natural resources, and trade.',fr:'Découvrez les possibilités de coopération dans l’agriculture, l’énergie, les ressources naturelles et le commerce.'}, detail:{en:'The embassy can direct business inquiries to the appropriate institutions and help establish connections between Congolese and Namibian partners.',fr:'L’ambassade peut orienter les demandes économiques vers les institutions compétentes et faciliter les contacts entre partenaires congolais et namibiens.'}},
   ];
-
-  return (
-    <section
-      id="discover"
-      aria-label="Discover the Democratic Republic of the Congo"
-      className="py-24 sm:py-28 lg:py-32 bg-[#071A2F] text-[#F8F7F3] border-b border-[#0D223E]"
-    >
-      <div className="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
-        {/* Editorial Section Heading */}
-        <div className="space-y-3">
-          <span className="font-condensed text-xs font-bold tracking-[0.2em] uppercase text-[#C89A3D] block">
-            {t({ en: 'SOVEREIGN PANORAMA', fr: 'PANORAMA SOUVERAIN' })}
-          </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-medium text-[#F8F7F3] tracking-tight leading-tight">
-            <span className="block">{t({ en: 'DISCOVER', fr: 'DÉCOUVRIR' })}</span>
-            <span className="block text-[#C89A3D]">
-              {t({
-                en: 'THE DEMOCRATIC REPUBLIC OF THE CONGO',
-                fr: 'LA RÉPUBLIQUE DÉMOCRATIQUE DU CONGO',
-              })}
-            </span>
-          </h2>
-          <p className="font-sans text-[15px] sm:text-base text-slate-300 font-light max-w-2xl leading-[1.75]">
-            {t({
-              en: 'A continent-sized nation of cultural vitality, peerless biodiversity, and vital energy resources at the heart of Africa.',
-              fr: 'Une nation aux dimensions continentales, caractérisée par une vitalité culturelle, une biodiversité unique et des ressources stratégiques au cœur de l’Afrique.',
-            })}
-          </p>
+  return <section id="discover" aria-labelledby="discover-heading" className="drc-discover py-16 sm:py-20 lg:py-24">
+    <div className="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="grid lg:grid-cols-[.85fr_1.4fr] gap-10 lg:gap-20 items-start">
+        <div>
+          <span className="section-kicker">{t({en:'Discover our country',fr:'Découvrez notre pays'})}</span>
+          <h2 id="discover-heading" className="font-serif text-4xl sm:text-5xl leading-[1.08] text-[#173B56] mt-4">{t({en:'A closer look at',fr:'Un regard sur'})}<br/><span className="text-[#176FA6]">{t({en:'the Congo.',fr:'le Congo.'})}</span></h2>
+          <p className="text-[#49667B] leading-relaxed mt-5 max-w-md">{t({en:'A country of living traditions, remarkable landscapes, and connections that reach beyond its borders.',fr:'Un pays de traditions vivantes, de paysages remarquables et de liens qui dépassent ses frontières.'})}</p>
+          <figure className="drc-flag-panel mt-8 p-7 sm:p-9">
+            <DrcFlag size={130} className="discover-flag"/>
+            <figcaption className="mt-5 text-sm font-medium text-[#173B56]">{t({en:'Democratic Republic of the Congo',fr:'République démocratique du Congo'})}<span className="block mt-1 text-xs tracking-[.14em] uppercase text-[#49667B]">Justice · Paix · Travail</span></figcaption>
+          </figure>
         </div>
-
-        {/* 3 Large Editorial Image Tiles: Culture & Heritage, Nature & Tourism, Business & Investment */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10">
-          {themeImages.map((theme, index) => {
-            const matchedData =
-              DISCOVER_DRC_3_CARDS.find((c) => c.id === theme.id) || DISCOVER_DRC_3_CARDS[0];
-
-            return (
-              <div
-                key={theme.id}
-                onClick={() => setSelectedTheme(matchedData)}
-                className="group cursor-pointer space-y-4"
-              >
-                {/* Large Dominant Image Tile */}
-                <div className="relative aspect-[3/4] overflow-hidden bg-[#051322] border border-[#C89A3D]/20 group-hover:border-[#C89A3D]/80 transition-all duration-500 shadow-xl">
-                  <img
-                    src={theme.image}
-                    alt={t(theme.label)}
-                    className="w-full h-full object-cover filter brightness-90 contrast-105 group-hover:scale-105 transition-transform duration-700"
-                  />
-
-                  {/* Gradient Overlay for Editorial Depth */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#071A2F] via-[#071A2F]/30 to-transparent opacity-85 group-hover:opacity-75 transition-opacity" />
-
-                  {/* Editorial Overlay Caption */}
-                  <div className="absolute inset-0 p-6 sm:p-7 flex flex-col justify-between">
-                    <span className="font-condensed text-[11px] font-bold text-[#C89A3D] tracking-widest uppercase">
-                      0{index + 1}
-                    </span>
-
-                    <div className="space-y-1.5">
-                      <span className="font-condensed text-xs font-semibold tracking-wider text-[#1478C8] uppercase block">
-                        {t(theme.subtitle)}
-                      </span>
-                      <h3 className="font-serif text-2xl font-medium text-white group-hover:text-[#C89A3D] transition-colors leading-tight">
-                        {t(theme.label)}
-                      </h3>
-                      <p className="font-sans text-xs sm:text-sm text-slate-300 font-light leading-relaxed pt-1">
-                        {t(theme.summary)}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Subtle Text Link */}
-                <div className="pt-1">
-                  <span className="inline-flex items-center gap-1.5 text-xs font-condensed font-bold tracking-widest uppercase text-[#C89A3D] group-hover:text-white transition-colors">
-                    <span>{t({ en: 'Explore Theme →', fr: 'Consulter le volet →' })}</span>
-                  </span>
-                </div>
-              </div>
-            );
-          })}
+        <div className="divide-y divide-[#BBD8EA] border-y border-[#BBD8EA]">
+          {themes.map(({id,Icon,title,subtitle,text,detail})=><article key={id} className="py-7 sm:py-8 grid grid-cols-[44px_1fr] sm:grid-cols-[56px_1fr] gap-4 sm:gap-5">
+            <div className="theme-icon"><Icon size={23} strokeWidth={1.5} aria-hidden="true"/></div>
+            <div><span className="text-xs text-[#176FA6] font-semibold tracking-wide">{t(subtitle)}</span><h3 className="font-serif text-2xl sm:text-3xl text-[#173B56] mt-1">{t(title)}</h3><p className="mt-3 leading-relaxed text-[#49667B] text-[15px]">{t(text)}</p>
+              <details className="theme-details mt-4"><summary className="inline-flex items-center gap-2 text-sm text-[#176FA6] font-semibold cursor-pointer hover:text-[#125D8D]">{t({en:'Explore this theme',fr:'Explorer ce thème'})}<ChevronDown size={15} aria-hidden="true"/></summary><p className="mt-3 text-sm leading-relaxed text-[#49667B]">{t(detail)}</p></details>
+            </div>
+          </article>)}
         </div>
       </div>
-
-      {/* Editorial Theme Briefing Dialog */}
-      {selectedTheme && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-[#071A2F] border border-[#C89A3D]/50 max-w-2xl w-full p-6 sm:p-8 text-[#F8F7F3] relative shadow-2xl space-y-6 animate-drawer-panel">
-            <button
-              type="button"
-              onClick={() => setSelectedTheme(null)}
-              className="absolute top-5 right-5 p-1.5 text-slate-400 hover:text-white transition-colors cursor-pointer"
-              aria-label="Close dialog"
-            >
-              <X size={20} />
-            </button>
-
-            <div className="space-y-1">
-              <span className="font-condensed text-xs font-bold tracking-widest text-[#C89A3D] uppercase">
-                {t(selectedTheme.subtitle)}
-              </span>
-              <h3 className="text-2xl sm:text-3xl font-serif font-medium text-white">
-                {t(selectedTheme.title)}
-              </h3>
-            </div>
-
-            <p className="font-sans text-sm sm:text-base text-slate-300 leading-relaxed font-light">
-              {t(selectedTheme.desc)}
-            </p>
-
-            <div className="p-4 bg-[#051322] border border-slate-700/80 text-xs font-condensed uppercase tracking-wider text-[#C89A3D] flex items-center justify-between">
-              <span>{t({ en: 'Strategic Keynote', fr: 'Repère Stratégique' })}</span>
-              <span className="font-bold text-white">{t(selectedTheme.keyPoint)}</span>
-            </div>
-
-            <div className="pt-2 flex justify-end">
-              <button
-                type="button"
-                onClick={() => setSelectedTheme(null)}
-                className="px-5 py-2.5 bg-[#C89A3D] text-[#071A2F] text-xs font-condensed font-bold uppercase tracking-widest cursor-pointer"
-              >
-                {t({ en: 'Close', fr: 'Fermer' })}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </section>
-  );
+      <div className="mt-10 pt-6 border-t border-[#BBD8EA] flex flex-col sm:flex-row sm:items-center justify-between gap-4"><p className="text-sm text-[#49667B]">{t({en:'Planning a visit or looking to connect with Congolese partners?',fr:'Un projet de voyage ou de partenariat avec le Congo ?'})}</p><a href="#contact" className="inline-flex items-center gap-2 text-sm font-semibold text-[#176FA6] hover:underline">{t({en:'Speak with the embassy',fr:'Contacter l’ambassade'})}<ArrowRight size={16}/></a></div>
+    </div>
+  </section>;
 };

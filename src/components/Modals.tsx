@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { AccessibleModal } from './AccessibleModal';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   X,
   Calendar,
@@ -29,323 +30,17 @@ export const AppointmentModal: React.FC<{
   preselectedServiceId?: string;
 }> = ({ isOpen, onClose, preselectedServiceId }) => {
   const { t } = useLanguage();
-  const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
-  const [service, setService] = useState<string>(preselectedServiceId || 'visa');
-  const [selectedDate, setSelectedDate] = useState<string>('2026-10-21');
-  const [selectedTime, setSelectedTime] = useState<string>('10:15');
-  const [fullName, setFullName] = useState<string>('');
-  const [passportNumber, setPassportNumber] = useState<string>('');
-  const [phone, setPhone] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [refCode, setRefCode] = useState<string>('');
-
   if (!isOpen) return null;
-
-  const handleNext = () => {
-    if (step === 3) {
-      const generated = `AMBA-RDV-2026-${Math.floor(1000 + Math.random() * 9000)}`;
-      setRefCode(generated);
-      setStep(4);
-    } else {
-      setStep((step + 1) as any);
-    }
-  };
-
-  const handleReset = () => {
-    setStep(1);
-    setFullName('');
-    setPassportNumber('');
-    setPhone('');
-    setEmail('');
-    onClose();
-  };
-
   return (
-    <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-[#071B33] border border-[#D6A84B] rounded-xs max-w-2xl w-full p-6 sm:p-8 text-white relative shadow-2xl my-8">
-        <button
-          type="button"
-          onClick={handleReset}
-          className="absolute top-5 right-5 p-2 text-slate-400 hover:text-white bg-slate-800/60 rounded-xs cursor-pointer"
-        >
-          <X size={20} />
-        </button>
-
-        {/* Modal Header */}
-        <div className="space-y-1 pb-4 border-b border-slate-700">
-          <div className="flex items-center gap-2">
-            <Calendar size={16} className="text-[#D6A84B]" />
-            <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#D6A84B]">
-              {t({ en: 'Official Chancery Scheduler', fr: 'Guichet Consulaire Sur Rendez-vous' })}
-            </span>
-          </div>
-          <h3 className="text-xl sm:text-2xl font-serif font-bold text-white">
-            {t({ en: 'Book a Consular Appointment', fr: 'Prendre Rendez-vous Consulaire' })}
-          </h3>
-          <p className="text-xs text-slate-300">
-            {t({
-              en: 'Chancery: 56 Simeon Leenakele Shixungileni, Eros, Windhoek',
-              fr: 'Chancellerie : 56 Simeon Leenakele Shixungileni, Eros, Windhoek',
-            })}
-          </p>
-        </div>
-
-        {/* Step 1: Select Service */}
-        {step === 1 && (
-          <div className="py-6 space-y-4">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-300 block">
-              {t({ en: 'Step 1: Select Required Service', fr: 'Étape 1 : Sélectionnez le Service' })}
-            </span>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {[
-                { id: 'visa', label: { en: 'Visa Application Submission', fr: 'Dépôt de Demande de Visa' } },
-                { id: 'passport', label: { en: 'Biometric Passport Enrollment', fr: 'Enrôlement Passeport Biométrique' } },
-                { id: 'registration', label: { en: 'Consular Card / Registration', fr: 'Carte Consulaire / Immatriculation' } },
-                { id: 'legalization', label: { en: 'Document Legalization / Notary', fr: 'Légalisation & Certification d’Actes' } },
-                { id: 'civil', label: { en: 'Civil Status Transcription', fr: 'Transcription d’État Civil' } },
-                { id: 'other', label: { en: 'Other Diplomatic Inquiry', fr: 'Autre Démarche Consulaire' } },
-              ].map((opt) => (
-                <button
-                  key={opt.id}
-                  type="button"
-                  onClick={() => setService(opt.id)}
-                  className={`p-3.5 text-left rounded-xs border text-xs font-medium transition-all cursor-pointer ${
-                    service === opt.id
-                      ? 'bg-[#007FFF] text-white border-[#007FFF] shadow-md'
-                      : 'bg-[#0B2548] text-slate-200 border-slate-700 hover:border-slate-500'
-                  }`}
-                >
-                  <span className="font-bold block">{t(opt.label)}</span>
-                </button>
-              ))}
-            </div>
-
-            <div className="pt-4 flex justify-end">
-              <button
-                type="button"
-                onClick={handleNext}
-                className="px-6 py-2.5 bg-[#D6A84B] hover:bg-[#c59937] text-[#071B33] text-xs font-bold uppercase tracking-wider rounded-xs cursor-pointer"
-              >
-                {t({ en: 'Continue to Date & Time →', fr: 'Continuer vers Date & Heure →' })}
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Step 2: Slot Selection */}
-        {step === 2 && (
-          <div className="py-6 space-y-5">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-300 block">
-              {t({ en: 'Step 2: Choose Appointment Slot', fr: 'Étape 2 : Choisissez le Créneau' })}
-            </span>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              <div className="space-y-1.5">
-                <label className="text-xs text-slate-300 font-semibold uppercase tracking-wider block">
-                  {t({ en: 'Available Date (Mon–Thu)', fr: 'Date Disponible (Lun–Jeu)' })}
-                </label>
-                <select
-                  value={selectedDate}
-                  onChange={(e) => setSelectedDate(e.target.value)}
-                  className="w-full p-2.5 bg-[#0B2548] border border-slate-600 rounded-xs text-xs text-white"
-                >
-                  <option value="2026-10-21">Wednesday, 21 Oct 2026</option>
-                  <option value="2026-10-22">Thursday, 22 Oct 2026</option>
-                  <option value="2026-10-26">Monday, 26 Oct 2026</option>
-                  <option value="2026-10-27">Tuesday, 27 Oct 2026</option>
-                  <option value="2026-10-28">Wednesday, 28 Oct 2026</option>
-                </select>
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="text-xs text-slate-300 font-semibold uppercase tracking-wider block">
-                  {t({ en: 'Available Time Slot', fr: 'Créneau Horaire' })}
-                </label>
-                <select
-                  value={selectedTime}
-                  onChange={(e) => setSelectedTime(e.target.value)}
-                  className="w-full p-2.5 bg-[#0B2548] border border-slate-600 rounded-xs text-xs text-white"
-                >
-                  <option value="09:30">09:30 – 10:00 (Morning)</option>
-                  <option value="10:15">10:15 – 10:45</option>
-                  <option value="11:00">11:00 – 11:30</option>
-                  <option value="11:45">11:45 – 12:15</option>
-                  <option value="12:30">12:30 – 13:00 (Last window)</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="p-3 bg-[#051325] border border-slate-700 text-xs text-slate-300 space-y-1">
-              <span className="font-bold text-[#D6A84B] block">
-                {t({ en: 'Consular Window Notice:', fr: 'Rappel du Guichet Consulaire :' })}
-              </span>
-              <p>
-                {t({
-                  en: 'Public appointments operate strictly between 09:30 and 13:00. Punctual arrival at least 10 minutes prior to scheduled slot is required for security clearance.',
-                  fr: 'Les réceptions d’usagers s’effectuent strictement entre 09h30 et 13h00. Une arrivée 10 minutes à l’avance est requise pour le contrôle de sécurité.',
-                })}
-              </p>
-            </div>
-
-            <div className="pt-4 flex items-center justify-between">
-              <button
-                type="button"
-                onClick={() => setStep(1)}
-                className="text-xs text-slate-400 hover:text-white cursor-pointer"
-              >
-                {t({ en: '← Back', fr: '← Retour' })}
-              </button>
-              <button
-                type="button"
-                onClick={handleNext}
-                className="px-6 py-2.5 bg-[#D6A84B] hover:bg-[#c59937] text-[#071B33] text-xs font-bold uppercase tracking-wider rounded-xs cursor-pointer"
-              >
-                {t({ en: 'Continue to Details →', fr: 'Continuer vers Vos Coordonnées →' })}
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Step 3: Applicant info */}
-        {step === 3 && (
-          <div className="py-6 space-y-4">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-300 block">
-              {t({ en: 'Step 3: Applicant Particulars', fr: 'Étape 3 : Renseignements du Demandeur' })}
-            </span>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-1">
-                <label className="text-xs text-slate-300 font-medium">
-                  {t({ en: 'Full Legal Name *', fr: 'Nom et Prénom *' })}
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  placeholder="e.g. Patrice Lumumba"
-                  className="w-full p-2 bg-[#0B2548] border border-slate-600 rounded-xs text-xs text-white"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-xs text-slate-300 font-medium">
-                  {t({ en: 'Passport or ID Number *', fr: 'N° de Passeport ou Pièce d’Identité *' })}
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={passportNumber}
-                  onChange={(e) => setPassportNumber(e.target.value)}
-                  placeholder="e.g. OP0189423"
-                  className="w-full p-2 bg-[#0B2548] border border-slate-600 rounded-xs text-xs text-white"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-xs text-slate-300 font-medium">
-                  {t({ en: 'Mobile Telephone in Namibia *', fr: 'Téléphone Mobile en Namibie *' })}
-                </label>
-                <input
-                  type="tel"
-                  required
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="+264 81..."
-                  className="w-full p-2 bg-[#0B2548] border border-slate-600 rounded-xs text-xs text-white"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-xs text-slate-300 font-medium">
-                  {t({ en: 'Email Address *', fr: 'Adresse Électronique *' })}
-                </label>
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="applicant@domain.com"
-                  className="w-full p-2 bg-[#0B2548] border border-slate-600 rounded-xs text-xs text-white"
-                />
-              </div>
-            </div>
-
-            <div className="pt-4 flex items-center justify-between">
-              <button
-                type="button"
-                onClick={() => setStep(2)}
-                className="text-xs text-slate-400 hover:text-white cursor-pointer"
-              >
-                {t({ en: '← Back', fr: '← Retour' })}
-              </button>
-              <button
-                type="button"
-                onClick={handleNext}
-                disabled={!fullName || !phone || !email}
-                className="px-6 py-2.5 bg-[#D6A84B] hover:bg-[#c59937] disabled:opacity-50 text-[#071B33] text-xs font-bold uppercase tracking-wider rounded-xs cursor-pointer"
-              >
-                {t({ en: 'Confirm Appointment', fr: 'Confirmer le Rendez-vous' })}
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Step 4: Confirmation voucher */}
-        {step === 4 && (
-          <div className="py-6 space-y-5 text-center">
-            <div className="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500/50 text-emerald-400 mx-auto flex items-center justify-center">
-              <CheckCircle2 size={36} />
-            </div>
-
-            <div className="space-y-1">
-              <span className="text-xs font-semibold uppercase tracking-widest text-[#D6A84B]">
-                {t({ en: 'Appointment Successfully Scheduled', fr: 'Rendez-vous Confirmé' })}
-              </span>
-              <h4 className="text-2xl font-serif font-bold text-white">
-                {refCode}
-              </h4>
-            </div>
-
-            <div className="bg-[#051325] border border-slate-700 p-4 rounded-xs text-left text-xs space-y-2 max-w-md mx-auto">
-              <div className="flex justify-between">
-                <span className="text-slate-400">{t({ en: 'Applicant:', fr: 'Demandeur :' })}</span>
-                <span className="text-white font-medium">{fullName || 'Applicant'}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-400">{t({ en: 'Service:', fr: 'Démarche :' })}</span>
-                <span className="text-white font-medium capitalize">{service}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-400">{t({ en: 'Date & Time:', fr: 'Date & Heure :' })}</span>
-                <span className="text-[#D6A84B] font-mono font-bold">{selectedDate} @ {selectedTime}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-400">{t({ en: 'Location:', fr: 'Lieu :' })}</span>
-                <span className="text-white font-medium">Chancery, Windhoek</span>
-              </div>
-            </div>
-
-            <p className="text-xs text-slate-300 max-w-md mx-auto leading-relaxed">
-              {t({
-                en: 'Please bring original supporting documents and arrive at 56, Simeon Leenakele Shixungileni, Eros, Windhoek.',
-                fr: 'Veuillez vous munir des originaux des pièces et vous présenter au 56, Simeon Leenakele Shixungileni, Eros, Windhoek.',
-              })}
-            </p>
-
-            <div className="pt-2">
-              <button
-                type="button"
-                onClick={handleReset}
-                className="px-6 py-2.5 bg-[#007FFF] hover:bg-[#006ee0] text-white text-xs font-bold uppercase tracking-wider rounded-xs cursor-pointer"
-              >
-                {t({ en: 'Done', fr: 'Terminer' })}
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
+    <AccessibleModal onClose={onClose}>
+      <section  className="relative max-w-lg w-full bg-white text-[#173B56] p-8 sm:p-10 shadow-2xl border-t-4 border-[#C89A3D]" onClick={e => e.stopPropagation()}>
+        <button type="button" onClick={onClose} aria-label={t({en:'Close',fr:'Fermer'})} autoFocus className="absolute top-4 right-4 p-2 hover:bg-sky-50"><X size={20}/></button>
+        <Calendar className="text-[#176FA6] mb-5" size={28}/>
+        <h2 id="appointment-title" className="font-serif text-3xl mb-4">{t({en:'Plan your consular visit',fr:'Préparer votre visite consulaire'})}</h2>
+        <p className="leading-relaxed text-slate-600">{t({en:'Online booking is not available yet. Please contact the embassy to arrange your appointment and confirm the required documents before visiting.',fr:'La prise de rendez-vous en ligne n’est pas encore disponible. Veuillez contacter l’ambassade pour organiser votre rendez-vous et confirmer les pièces à fournir avant votre visite.'})}</p>
+        <a href="#contact" onClick={onClose} className="mt-7 inline-flex bg-[#176FA6] text-white px-6 py-3 font-semibold hover:bg-[#125D8D]">{t({en:'Contact the embassy',fr:'Contacter l’ambassade'})} →</a>
+      </section>
+    </AccessibleModal>
   );
 };
 
@@ -361,12 +56,12 @@ export const ServiceDetailModal: React.FC<{
   if (!service) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-[#071B33] border border-[#D6A84B] rounded-xs max-w-2xl w-full p-6 sm:p-8 text-white relative shadow-2xl my-8 space-y-6">
+    <AccessibleModal onClose={onClose}>
+      <div className="bg-[#176FA6] border border-[#D6A84B] rounded-xs max-w-2xl w-full p-6 sm:p-8 text-white relative shadow-2xl my-8 space-y-6">
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-5 right-5 p-2 text-slate-400 hover:text-white bg-slate-800/60 rounded-xs cursor-pointer"
+          className="absolute top-5 right-5 p-2 text-sky-100 hover:text-white bg-slate-800/60 rounded-xs cursor-pointer"
         >
           <X size={20} />
         </button>
@@ -386,17 +81,17 @@ export const ServiceDetailModal: React.FC<{
           </p>
         </div>
 
-        <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-light">
+        <p className="text-xs sm:text-sm text-sky-50 leading-relaxed font-light">
           {t(service.description)}
         </p>
 
         {/* Required Documents Checklist */}
-        <div className="space-y-2.5 bg-[#051325] p-5 rounded-xs border border-slate-700">
+        <div className="space-y-2.5 bg-[#125D8D] p-5 rounded-xs border border-slate-700">
           <h4 className="text-xs font-bold uppercase tracking-wider text-white flex items-center gap-2">
             <FileText size={14} className="text-[#007FFF]" />
             <span>{t({ en: 'Mandatory Requirements Checklist', fr: 'Pièces Justificatives Obligatoires' })}</span>
           </h4>
-          <ul className="space-y-2 text-xs text-slate-300">
+          <ul className="space-y-2 text-xs text-sky-50">
             {t(service.requirements).map((req, i) => (
               <li key={i} className="flex items-start gap-2">
                 <span className="text-[#D6A84B] font-bold">✓</span>
@@ -409,7 +104,7 @@ export const ServiceDetailModal: React.FC<{
         {/* Processing & Fee Notice */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
           <div className="p-3 bg-[#0B2548] rounded-xs border border-slate-700 space-y-1">
-            <span className="text-slate-400 text-[10px] uppercase tracking-wider block">
+            <span className="text-sky-100 text-[10px] uppercase tracking-wider block">
               {t({ en: 'Turnaround Time', fr: 'Délais de Traitement' })}
             </span>
             <span className="text-white font-medium block">
@@ -418,7 +113,7 @@ export const ServiceDetailModal: React.FC<{
           </div>
 
           <div className="p-3 bg-[#0B2548] rounded-xs border border-slate-700 space-y-1">
-            <span className="text-slate-400 text-[10px] uppercase tracking-wider block">
+            <span className="text-sky-100 text-[10px] uppercase tracking-wider block">
               {t({ en: 'Chancery Fee', fr: 'Droits de Chancellerie' })}
             </span>
             <span className="text-[#D6A84B] font-medium block">
@@ -432,19 +127,11 @@ export const ServiceDetailModal: React.FC<{
           {service.formName ? (
             <button
               type="button"
-              onClick={() => {
-                const blob = new Blob([`Official Republic of the Congo Chancery Document - ${service.title.en}`], { type: 'text/plain' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `${service.id}-guidelines-form.txt`;
-                a.click();
-                URL.revokeObjectURL(url);
-              }}
+              disabled aria-disabled="true"
               className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#1478C8] hover:text-[#C89A3D] cursor-pointer transition-colors"
             >
               <Download size={14} />
-              <span>{t(service.formName)}</span>
+              <span>{t({en:'Approved form pending',fr:'Formulaire en attente de validation'})}</span>
             </button>
           ) : <div />}
 
@@ -460,7 +147,7 @@ export const ServiceDetailModal: React.FC<{
           </button>
         </div>
       </div>
-    </div>
+    </AccessibleModal>
   );
 };
 
@@ -477,7 +164,7 @@ export const AmbassadorModal: React.FC<{
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+    <AccessibleModal onClose={onClose}>
       <div className="bg-[#FBF9F5] border-2 border-[#D6A84B] rounded-xs max-w-3xl w-full p-8 sm:p-12 text-[#101828] relative shadow-2xl my-8 space-y-6">
         <button
           type="button"
@@ -544,7 +231,7 @@ export const AmbassadorModal: React.FC<{
           </div>
         </div>
       </div>
-    </div>
+    </AccessibleModal>
   );
 };
 
@@ -559,12 +246,12 @@ export const NoticeModal: React.FC<{
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-[#071B33] border border-[#D6A84B] rounded-xs max-w-xl w-full p-6 sm:p-8 text-white relative shadow-2xl space-y-5">
+    <AccessibleModal onClose={onClose}>
+      <div className="bg-[#176FA6] border border-[#D6A84B] rounded-xs max-w-xl w-full p-6 sm:p-8 text-white relative shadow-2xl space-y-5">
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-5 right-5 p-2 text-slate-400 hover:text-white bg-slate-800/60 rounded-xs cursor-pointer"
+          className="absolute top-5 right-5 p-2 text-sky-100 hover:text-white bg-slate-800/60 rounded-xs cursor-pointer"
         >
           <X size={20} />
         </button>
@@ -573,14 +260,14 @@ export const NoticeModal: React.FC<{
           <span className="px-2.5 py-1 rounded-xs bg-[#D6A84B]/20 text-[#D6A84B] text-xs font-bold uppercase tracking-wider border border-[#D6A84B]/40">
             {t({ en: 'OFFICIAL NOTICE', fr: 'COMMUNIQUÉ OFFICIEL' })}
           </span>
-          <span className="text-xs text-slate-400 font-mono">{OFFICIAL_NOTICE.refCode}</span>
+          <span className="text-xs text-sky-100 font-mono">{OFFICIAL_NOTICE.refCode}</span>
         </div>
 
         <h3 className="text-xl font-serif font-bold text-white">
           {t(OFFICIAL_NOTICE.headline)}
         </h3>
 
-        <div className="bg-[#051325] border border-slate-700 p-5 rounded-xs text-xs sm:text-sm text-slate-300 leading-relaxed space-y-3 font-light">
+        <div className="bg-[#125D8D] border border-slate-700 p-5 rounded-xs text-xs sm:text-sm text-sky-50 leading-relaxed space-y-3 font-light">
           <p>{t(OFFICIAL_NOTICE.fullNotice)}</p>
           <p className="text-[#D6A84B]">
             {t({
@@ -600,7 +287,7 @@ export const NoticeModal: React.FC<{
           </button>
         </div>
       </div>
-    </div>
+    </AccessibleModal>
   );
 };
 
@@ -615,12 +302,12 @@ export const EmergencyModal: React.FC<{
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-[#071B33] border-2 border-red-500/80 rounded-xs max-w-xl w-full p-6 sm:p-8 text-white relative shadow-2xl space-y-6">
+    <AccessibleModal onClose={onClose}>
+      <div className="bg-[#176FA6] border-2 border-red-500/80 rounded-xs max-w-xl w-full p-6 sm:p-8 text-white relative shadow-2xl space-y-6">
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-5 right-5 p-2 text-slate-400 hover:text-white bg-slate-800/60 rounded-xs cursor-pointer"
+          className="absolute top-5 right-5 p-2 text-sky-100 hover:text-white bg-slate-800/60 rounded-xs cursor-pointer"
         >
           <X size={20} />
         </button>
@@ -639,23 +326,23 @@ export const EmergencyModal: React.FC<{
           </div>
         </div>
 
-        <div className="bg-[#051325] border border-red-500/30 p-5 rounded-xs space-y-3">
-          <span className="text-xs uppercase tracking-wider text-slate-400 block">
+        <div className="bg-[#125D8D] border border-red-500/30 p-5 rounded-xs space-y-3">
+          <span className="text-xs uppercase tracking-wider text-sky-100 block">
             {t({ en: 'Emergency Duty Officer Hotline', fr: 'Standard d’Urgence' })}
           </span>
           <div className="text-2xl font-mono font-bold text-[#D6A84B]">
             {EMBASSY_INFO.phone}
           </div>
-          <p className="text-xs text-slate-300 leading-relaxed font-light">
+          <p className="text-xs text-sky-50 leading-relaxed font-light">
             {t(EMBASSY_INFO.emergencyNote)}
           </p>
         </div>
 
-        <div className="space-y-2 text-xs text-slate-300">
+        <div className="space-y-2 text-xs text-sky-50">
           <span className="font-bold text-white block">
             {t({ en: 'Applicable Emergency Situations:', fr: 'Situations d’Urgence Prises en Charge :' })}
           </span>
-          <ul className="space-y-1.5 list-disc list-inside text-slate-300">
+          <ul className="space-y-1.5 list-disc list-inside text-sky-50">
             <li>{t({ en: 'Acute medical distress or urgent hospitalization of a citizen', fr: 'Détresse médicale aiguë ou hospitalisation grave d’un compatriote' })}</li>
             <li>{t({ en: 'Detention, police arrest or deprivation of liberty in Namibia', fr: 'Arrestation ou garde à vue sur le territoire namibien' })}</li>
             <li>{t({ en: 'Emergency repatriation coordination', fr: 'Coordination de rapatriement d’urgence' })}</li>
@@ -673,7 +360,7 @@ export const EmergencyModal: React.FC<{
           </button>
         </div>
       </div>
-    </div>
+    </AccessibleModal>
   );
 };
 
@@ -721,12 +408,12 @@ export const FormsModal: React.FC<{
   ];
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-[#071B33] border border-[#D6A84B] rounded-xs max-w-xl w-full p-6 sm:p-8 text-white relative shadow-2xl space-y-6">
+    <AccessibleModal onClose={onClose}>
+      <div className="bg-[#176FA6] border border-[#D6A84B] rounded-xs max-w-xl w-full p-6 sm:p-8 text-white relative shadow-2xl space-y-6">
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-5 right-5 p-2 text-slate-400 hover:text-white bg-slate-800/60 rounded-xs cursor-pointer"
+          className="absolute top-5 right-5 p-2 text-sky-100 hover:text-white bg-slate-800/60 rounded-xs cursor-pointer"
         >
           <X size={20} />
         </button>
@@ -741,10 +428,10 @@ export const FormsModal: React.FC<{
           <h3 className="text-xl sm:text-2xl font-serif font-bold text-white">
             {t({ en: 'Download Official Consular Forms', fr: 'Télécharger les Formulaires' })}
           </h3>
-          <p className="text-xs text-slate-300">
+          <p className="text-xs text-sky-50">
             {t({
-              en: 'Fill out these forms prior to your Chancery appointment.',
-              fr: 'Complétez ces formulaires avant votre rendez-vous à la Chancellerie.',
+              en: 'Presentation preview: approved PDF forms will be added after embassy validation.',
+              fr: 'Version de présentation : les formulaires PDF approuvés seront ajoutés après validation de l’ambassade.',
             })}
           </p>
         </div>
@@ -757,7 +444,7 @@ export const FormsModal: React.FC<{
             >
               <div className="space-y-0.5">
                 <span className="text-[10px] font-mono text-[#D6A84B] block">
-                  {form.code} · PDF ({form.size})
+                  {form.code} · {t({en:'Pending approval',fr:'En attente de validation'})}
                 </span>
                 <h4 className="text-xs font-semibold text-white">
                   {t(form.title)}
@@ -766,19 +453,11 @@ export const FormsModal: React.FC<{
 
               <button
                 type="button"
-                onClick={() => {
-                  const blob = new Blob([`Official Embassy Form: ${t(form.title)} (${form.code})`], { type: 'text/plain' });
-                  const url = URL.createObjectURL(blob);
-                  const a = document.createElement('a');
-                  a.href = url;
-                  a.download = `${form.code}.txt`;
-                  a.click();
-                  URL.revokeObjectURL(url);
-                }}
+                disabled aria-disabled="true"
                 className="px-3 py-1.5 bg-[#C89A3D] hover:bg-[#b88c32] text-[#071A2F] text-xs font-condensed font-bold uppercase rounded-none cursor-pointer shrink-0 flex items-center gap-1 transition-colors"
               >
                 <Download size={13} />
-                <span>PDF</span>
+                <span>{t({en:'Pending',fr:'À venir'})}</span>
               </button>
             </div>
           ))}
@@ -794,7 +473,7 @@ export const FormsModal: React.FC<{
           </button>
         </div>
       </div>
-    </div>
+    </AccessibleModal>
   );
 };
 
@@ -809,12 +488,12 @@ export const DiplomatModal: React.FC<{
   if (!diplomat) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-[#071B33] border border-[#D6A84B] rounded-xs max-w-xl w-full p-6 sm:p-8 text-white relative shadow-2xl space-y-6">
+    <AccessibleModal onClose={onClose}>
+      <div className="bg-[#176FA6] border border-[#D6A84B] rounded-xs max-w-xl w-full p-6 sm:p-8 text-white relative shadow-2xl space-y-6">
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-5 right-5 p-2 text-slate-400 hover:text-white bg-slate-800/60 rounded-xs cursor-pointer"
+          className="absolute top-5 right-5 p-2 text-sky-100 hover:text-white bg-slate-800/60 rounded-xs cursor-pointer"
         >
           <X size={20} />
         </button>
@@ -836,15 +515,15 @@ export const DiplomatModal: React.FC<{
           </div>
         </div>
 
-        <p className="text-sm text-slate-300 leading-relaxed font-light">
+        <p className="text-sm text-sky-50 leading-relaxed font-light">
           {t(diplomat.bio)}
         </p>
 
-        <div className="space-y-2 bg-[#051325] p-4 rounded-xs border border-slate-700 text-xs">
+        <div className="space-y-2 bg-[#125D8D] p-4 rounded-xs border border-slate-700 text-xs">
           <span className="text-[11px] font-bold uppercase tracking-wider text-[#D6A84B] block">
             {t({ en: 'Official Responsibilities', fr: 'Attributions Officielles' })}
           </span>
-          <ul className="space-y-1.5 text-slate-300">
+          <ul className="space-y-1.5 text-sky-50">
             {t(diplomat.responsibilities).map((resp, i) => (
               <li key={i} className="flex items-start gap-2">
                 <span className="text-[#D6A84B] font-bold">✓</span>
@@ -865,7 +544,7 @@ export const DiplomatModal: React.FC<{
           </button>
         </div>
       </div>
-    </div>
+    </AccessibleModal>
   );
 };
 
@@ -880,19 +559,21 @@ export const ArticleModal: React.FC<{
   if (!article) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+    <AccessibleModal onClose={onClose}>
       <div className="bg-[#FBF9F5] border-2 border-[#071B33] rounded-xs max-w-3xl w-full p-8 sm:p-12 text-[#101828] relative shadow-2xl my-8 space-y-6">
         <button
           type="button"
           onClick={onClose}
+          aria-label={t({en: 'Close sample story', fr: 'Fermer l’article exemple'})}
           className="absolute top-6 right-6 p-2 text-slate-500 hover:text-black bg-slate-200/60 rounded-xs cursor-pointer"
         >
           <X size={20} />
         </button>
 
+        <p className="text-sm leading-relaxed bg-sky-50 border border-sky-200 text-[#173B56] p-4">{t({en:'Sample story — demonstration content, not a verified embassy announcement.',fr:'Article exemple — contenu de démonstration, et non un communiqué vérifié de l’ambassade.'})}</p>
         {/* Dispatch Header */}
         <div className="space-y-3 pb-6 border-b border-stone-300">
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <DrcFlag size={18} />
             <span className="text-xs font-bold uppercase tracking-widest text-[#007FFF]">
               {t(article.category)}
@@ -925,20 +606,20 @@ export const ArticleModal: React.FC<{
         <div className="pt-6 border-t border-stone-300 flex items-center justify-between text-xs text-stone-500">
           <span className="font-serif italic">
             {t({
-              en: 'Issued by Chancery Press & Information Division, Windhoek',
-              fr: 'Publié par le Service de Presse et d’Information de la Chancellerie, Windhoek',
+              en: 'Demonstration content for the embassy website',
+              fr: 'Contenu de démonstration pour le site de l’ambassade',
             })}
           </span>
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 bg-[#071B33] hover:bg-[#007FFF] text-white font-bold uppercase tracking-wider rounded-xs cursor-pointer"
+            className="px-4 py-2 bg-[#176FA6] hover:bg-[#007FFF] text-white font-bold uppercase tracking-wider rounded-xs cursor-pointer"
           >
             {t({ en: 'Close Dispatch', fr: 'Fermer la Dépêche' })}
           </button>
         </div>
       </div>
-    </div>
+    </AccessibleModal>
   );
 };
 
@@ -995,12 +676,12 @@ export const GalleryModal: React.FC<{
   ];
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-[#071B33] border border-[#D6A84B] rounded-xs max-w-3xl w-full p-6 sm:p-8 text-white relative shadow-2xl my-8 space-y-6">
+    <AccessibleModal onClose={onClose}>
+      <div className="bg-[#176FA6] border border-[#D6A84B] rounded-xs max-w-3xl w-full p-6 sm:p-8 text-white relative shadow-2xl my-8 space-y-6">
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-5 right-5 p-2 text-slate-400 hover:text-white bg-slate-800/60 rounded-xs cursor-pointer"
+          className="absolute top-5 right-5 p-2 text-sky-100 hover:text-white bg-slate-800/60 rounded-xs cursor-pointer"
         >
           <X size={20} />
         </button>
@@ -1023,7 +704,7 @@ export const GalleryModal: React.FC<{
               <div className="aspect-[16/10] bg-gradient-to-tr from-[#051325] to-[#0A203E] rounded-xs border border-slate-700/80 p-3 flex flex-col justify-between">
                 <div className="flex items-center justify-between">
                   <DrcFlag size={14} />
-                  <span className="text-[10px] text-slate-400 font-mono">{item.date}</span>
+                  <span className="text-[10px] text-sky-100 font-mono">{item.date}</span>
                 </div>
                 <div>
                   <span className="text-[9px] font-semibold uppercase tracking-wider text-[#D6A84B]">
@@ -1035,7 +716,7 @@ export const GalleryModal: React.FC<{
                 </div>
               </div>
 
-              <p className="text-[11px] text-slate-300 font-light leading-relaxed line-clamp-3">
+              <p className="text-[11px] text-sky-50 font-light leading-relaxed line-clamp-3">
                 {t(item.desc)}
               </p>
             </div>
@@ -1052,6 +733,6 @@ export const GalleryModal: React.FC<{
           </button>
         </div>
       </div>
-    </div>
+    </AccessibleModal>
   );
 };

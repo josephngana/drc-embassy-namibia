@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.pnpm-store/
+.env
+.env.*
+!.env.example
+*.log
+preview.png
+
+# Local review captures and generated audit output
+*-preview.png
+premium-audit.json

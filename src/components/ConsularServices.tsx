@@ -39,7 +39,7 @@ export const ConsularServices: React.FC<ConsularServicesProps> = ({
     <section
       id="services"
       aria-label="Consular Services"
-      className="py-24 sm:py-28 lg:py-32 bg-[#F8F7F3] border-b border-slate-200/70"
+      className="py-16 sm:py-20 lg:py-24 bg-[#F8F7F3] border-b border-slate-200/70"
     >
       {/* Slightly increased content width: max-w-[1380px] */}
       <div className="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
@@ -98,12 +98,12 @@ export const ConsularServices: React.FC<ConsularServicesProps> = ({
         </div>
 
         {/* ONE Horizontal Action Bar */}
-        <div className="bg-[#071A2F] text-[#F8F7F3] p-7 sm:p-9 flex flex-col md:flex-row items-center justify-between gap-6 border border-[#C89A3D]/30">
-          <div className="text-center md:text-left space-y-1">
-            <span className="font-condensed text-[10px] font-bold tracking-widest uppercase text-[#C89A3D]">
+        <div className="consular-assistance p-6 sm:p-8 space-y-6">
+          <div className="min-w-0 space-y-2">
+            <span className="font-condensed text-xs font-bold tracking-widest uppercase text-[#176FA6]">
               {t({ en: 'CONSULAR ASSISTANCE', fr: 'ASSISTANCE CONSULAIRE' })}
             </span>
-            <p className="font-serif text-xl sm:text-2xl text-white">
+            <p className="font-serif text-2xl sm:text-3xl text-[#173B56]">
               {t({
                 en: 'Direct access to official embassy procedures',
                 fr: 'Accès direct aux démarches officielles de la chancellerie',
@@ -111,30 +111,30 @@ export const ConsularServices: React.FC<ConsularServicesProps> = ({
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-3.5 shrink-0">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <button
               type="button"
               onClick={onOpenAppointmentModal}
-              className="inline-flex items-center gap-2 bg-[#C89A3D] hover:bg-[#b88c32] active:bg-[#a67d2a] text-[#071A2F] text-xs font-condensed font-bold uppercase tracking-widest px-6 py-3.5 transition-colors cursor-pointer shadow-xs whitespace-nowrap"
+              className="consular-action consular-action-primary"
             >
               <Calendar size={14} className="stroke-[2.5]" />
-              <span>{t({ en: 'Book an Appointment', fr: 'Prendre Rendez-vous' })}</span>
+              <span>{t({ en: 'Arrange an Appointment', fr: 'Organiser un rendez-vous' })}</span>
             </button>
 
             <button
               type="button"
               onClick={onOpenFormsModal}
-              className="inline-flex items-center gap-2 border border-[#F8F7F3]/30 hover:border-white text-[#F8F7F3] text-xs font-condensed font-semibold uppercase tracking-widest px-5 py-3.5 transition-colors cursor-pointer whitespace-nowrap"
+              className="consular-action consular-action-secondary"
             >
-              <Download size={14} className="text-[#1478C8]" />
+              <Download size={14} className="shrink-0" />
               <span>{t({ en: 'Download Forms', fr: 'Télécharger Formulaires' })}</span>
             </button>
 
             <a
               href="#contact"
-              className="inline-flex items-center gap-2 border border-[#F8F7F3]/30 hover:border-white text-[#F8F7F3] text-xs font-condensed font-semibold uppercase tracking-widest px-5 py-3.5 transition-colors cursor-pointer whitespace-nowrap"
+              className="consular-action consular-action-secondary"
             >
-              <Mail size={14} className="text-[#C89A3D]" />
+              <Mail size={14} className="shrink-0" />
               <span>{t({ en: 'Contact Consular Services', fr: 'Contacter la Section' })}</span>
             </a>
           </div>
